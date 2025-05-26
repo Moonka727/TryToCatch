@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Email Webhook Sender</title>
-<!-- SweetAlert2 CSS & JS -->
+<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
   body {
@@ -82,8 +82,8 @@
       event.preventDefault();
       const email = document.getElementById('emailInput').value.trim();
 
-      // Validate email format using regex
-      const emailRegex = /^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/;
+      // Correct email validation regex
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(email)) {
         Swal.fire({
           icon: 'error',
@@ -93,11 +93,10 @@
         return;
       }
 
-      // Replace this URL with your actual webhook URL
-      const webhookURL = 'https://hook.eu2.make.com/6qyqld9qayuj7uba2t19okaihj93nimy';
+      // Updated webhook URL
+      const webhookURL = 'https://hook.eu2.make.com/pbt4v2e6squsalhan31lpd6gvokwiy5p';
 
       try {
-        // Send email to the webhook using POST request
         const response = await fetch(webhookURL, {
           method: 'POST',
           headers: {
@@ -112,7 +111,6 @@
             title: 'Submitted!',
             text: 'Your email has been sent successfully.',
           });
-          // Clear input after successful submission
           document.getElementById('emailForm').reset();
         } else {
           throw new Error('Network response was not ok.');
