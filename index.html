@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Email Webhook Sender</title>
+<!-- SweetAlert2 CSS & JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+  body {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    background: #fff;
+    padding: 2.5rem 3rem;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+  p {
+    color: #555;
+    margin-bottom: 2rem;
+  }
+  input[type="email"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+    outline: none;
+  }
+  input[type="email"]:focus {
+    border-color: #2575fc;
+    box-shadow: 0 0 8px rgba(37, 117, 252, 0.5);
+  }
+  button {
+    margin-top: 1.5rem;
+    background: #2575fc;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.85rem 2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(37, 117, 252, 0.6);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  button:hover {
+    background: #1a52d1;
+    box-shadow: 0 8px 20px rgba(26, 82, 209, 0.8);
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Subscribe to Our Newsletter</h1>
+    <p>Enter your email below and submit</p>
+    <form id="emailForm">
+      <input type="email" id="emailInput" name="email" placeholder="Enter your email address" required />
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('emailForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const email = document.getElementById('emailInput').value.trim();
+
+      // Validate email format using regex
+      const emailRegex = /^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/;
+      if (!emailRegex.test(email)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Email',
+          text: 'Please enter a valid email address.',
+        });
+        return;
+      }
+
+      // Replace this URL with your actual webhook URL
+      const webhookURL = 'https://hook.eu2.make.com/6qyqld9qayuj7uba2t19okaihj93nimy';
+
+      try {
+        // Send email to the webhook using POST request
+        const response = await fetch(webhookURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: email }),
+        });
+
+        if (response.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Submitted!',
+            text: 'Your email has been sent successfully.',
+          });
+          // Clear input after successful submission
+          document.getElementById('emailForm').reset();
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: 'Failed to send email data. Please try again later.',
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+
